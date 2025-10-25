@@ -1,49 +1,34 @@
-"use client";
-
-import { Button, Container, TextField } from "@mui/material";
-import { useState } from "react";
+import LoginPageClient from "@/app/_components/loginPageClient";
 
 export default function Login() {
-  const [id, setId] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  const login = async () => {
-    const res = await fetch(`http://localhost:8080/api/v1/auth/login`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        username: id,
-        password,
-      }),
-    });
-  };
+  // 환경 변수에서 값 가져오기
+  const KAKAO_REST_API_KEY = process.env.NEXT_PUBLIC_KAKAO_REST_API_KEY;
+  const KAKAO_REDIRECT_URI = process.env.NEXT_PUBLIC_KAKAO_REDIRECT_URI;
+  const NAVER_CLIENT_ID = process.env.NEXT_PUBLIC_NAVER_CLIENT_ID;
+  const NAVER_REDIRECT_URI = process.env.NEXT_PUBLIC_NAVER_REDIRECT_URI;
+
+  const SERVER_URL = process.env.SERVER_URL ?? "http://localhost:8080";
+
+  // 카카오 인증 URL
+  const KAKAO_AUTH_URL =
+    `https://kauth.kakao.com/oauth/authorize?` +
+    `client_id=${KAKAO_REST_API_KEY}` +
+    `&redirect_uri=${KAKAO_REDIRECT_URI}` +
+    `&response_type=code`; // 인가 코드를 받기 위해 response_type은 'code'로 고정
+
+  // Node.js의 crypto 모듈을 사용하여 안전한 난수 문자열을 생성하는 예시
+
+  const NAVER_AUTH_URL =
+    `https://nid.naver.com/oauth2.0/authorize?` +
+    `client_id=${NAVER_CLIENT_ID}` +
+    `&redirect_uri=${NAVER_REDIRECT_URI}` +
+    `&response_type=code`;
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen gap-2 bg-white">
-      <div className="flex items-center gap-2">
-        ID:{" "}
-        <TextField
-          id="outlined-basic"
-          label="Outlined"
-          variant="outlined"
-          value={id}
-          onChange={(e) => setId(e.target.value)}
-        />
-      </div>
-      <div className="flex items-center gap-2">
-        PW:{" "}
-        <TextField
-          id="outlined-basic"
-          label="Outlined"
-          variant="outlined"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-      </div>
-      <Button variant="contained" onClick={login}>
-        LOGIN
-      </Button>
-    </div>
+    <LoginPageClient
+      serverUrl={SERVER_URL}
+      kakaoAuthUrl={KAKAO_AUTH_URL}
+      naverAuthUrl={NAVER_AUTH_URL}
+    />
   );
 }
