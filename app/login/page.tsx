@@ -1,4 +1,4 @@
-import LoginPageClient from "@/app/_components/loginPageClient";
+import LoginPageClient from "@/app/_components/page/loginPageClient";
 
 export default function Login() {
   // 환경 변수에서 값 가져오기
